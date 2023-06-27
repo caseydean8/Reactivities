@@ -1,4 +1,5 @@
 {
   "dotnet.defaultSolution": "Reactivities.sln",
-  "editor.detectIndentation": false
+  "editor.detectIndentation": false,
+  "vscode.tsc.compiler.alertTSConfigChanges": "never"
 }
