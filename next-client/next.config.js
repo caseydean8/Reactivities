@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-}
+  // set to false for semantic-ui button
+  reactStrictMode: false,
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
