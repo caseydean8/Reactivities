@@ -34,8 +34,8 @@ namespace API.Controllers
         [HttpGet("{id}")] // api/activities/id
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
-            // return await _context.Activities.FindAsync(id);
-            return Ok();
+            // object initializer syntax { Id = id } 
+            return await Mediator.Send(new Details.Query { Id = id });
         }
     }
 }
