@@ -31,11 +31,18 @@ namespace API.Controllers
             // Mediator is inherited from BaseApiController
             return await Mediator.Send(new List.Query());
         }
+
         [HttpGet("{id}")] // api/activities/id
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
             // object initializer syntax { Id = id } 
             return await Mediator.Send(new Details.Query { Id = id });
+        }
+        [HttpPost]
+        // IActionResult gives us access to the http response types such as return OK, return bad request, return not found
+        public async Task<IActionResult> CreateActivity(Activity activity)
+        {
+            return Ok(await Mediator.Send(new Create.Command { Activity = activity }));
         }
     }
 }
