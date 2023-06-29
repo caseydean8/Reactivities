@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using Domain;
-using Microsoft.EntityFrameworkCore;
-using MediatR;
 using Application.Activities;
 
 namespace API.Controllers
@@ -53,6 +50,14 @@ namespace API.Controllers
         {
             activity.Id = id;
             return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
+        }
+
+        // End point for deleting an activity
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteActivity(Guid id)
+        {
+            // Again use object initializer syntax when we instantiate this particular class
+            return Ok(await Mediator.Send(new Delete.Command { Id = id }));
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Application.Core
     {
         public MappingProfiles()
         {
+            // Create mapping from TSource Domain.Activity to TDestination Domain.Activity for Update operations
             CreateMap<Activity, Activity>();
         }
     }
