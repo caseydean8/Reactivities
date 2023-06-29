@@ -38,11 +38,21 @@ namespace API.Controllers
             // object initializer syntax { Id = id } 
             return await Mediator.Send(new Details.Query { Id = id });
         }
+
+        // End point for creating an activity
         [HttpPost]
         // IActionResult gives us access to the http response types such as return OK, return bad request, return not found
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
             return Ok(await Mediator.Send(new Create.Command { Activity = activity }));
+        }
+
+        // End point for updating an activity
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditActivity(Guid id, Activity activity)
+        {
+            activity.Id = id;
+            return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
     }
 }

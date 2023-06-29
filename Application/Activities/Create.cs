@@ -8,6 +8,7 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
+            // What we want to receive as a parameter from our API
             public Activity Activity { get; set; }
         }
 
@@ -27,7 +28,7 @@ namespace Application.Activities
             // 5. Set Task to async
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                // 6. Add Activity in memory (not db)
+                // 6. Add the Activity in memory (not db)
                 _context.Activities.Add(request.Activity);
                 // 7. Save Changes
                 await _context.SaveChangesAsync();
