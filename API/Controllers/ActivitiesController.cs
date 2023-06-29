@@ -15,17 +15,21 @@ namespace API.Controllers
         // {
         //     _context = context;
         // }
-        private readonly IMediator _mediator;
-        public ActivitiesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+
+        // constructor moved to BaseApiController
+        // private readonly IMediator _mediator;
+        // public ActivitiesController(IMediator mediator)
+        // {
+        //     _mediator = mediator;
+        // }
 
         [HttpGet] // api/activities
         public async Task<ActionResult<List<Activity>>> GetActivities()
         {
             // return await _context.Activities.ToListAsync();
-            return await _mediator.Send(new List.Query());
+            // return await _mediator.Send(new List.Query());
+            // Mediator is inherited from BaseApiController
+            return await Mediator.Send(new List.Query());
         }
         [HttpGet("{id}")] // api/activities/id
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
