@@ -33,7 +33,7 @@ namespace Application.Activities
             {
                 // Find activity in database by id
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
-                // Map request activity to activity from our db defined above
+                // Map request activity to activity in/from our db defined above
                 _mapper.Map(request.Activity, activity);
                 // Save changes to db
                 await _context.SaveChangesAsync();
