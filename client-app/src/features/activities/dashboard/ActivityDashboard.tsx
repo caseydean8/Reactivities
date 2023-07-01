@@ -12,6 +12,7 @@ interface Props {
   editMode: boolean;
   openForm: (id: string) => void;
   closeForm: () => void;
+  createOrEdit: (activity: Activity) => void;
 }
 
 export default function ActivityDashboard({
@@ -22,6 +23,7 @@ export default function ActivityDashboard({
   editMode,
   openForm,
   closeForm,
+  createOrEdit,
 }: Props) {
   return (
     <Grid>
@@ -34,7 +36,7 @@ export default function ActivityDashboard({
         </List>
       </Grid.Column>
       <Grid.Column width="6">
-        {/* Sidebar with image */}
+        {/* Sidebar with image. Todo: display in viewport so user doesn't have to scroll up */}
         {selectedActivity && !editMode && (
           <ActivityDetails
             activity={selectedActivity}
@@ -42,9 +44,13 @@ export default function ActivityDashboard({
             openForm={openForm}
           />
         )}
-        {/* If editing show form */}
+        {/* If editing show form in sidebar */}
         {editMode && (
-          <ActivityForm activity={selectedActivity} closeForm={closeForm} />
+          <ActivityForm
+            closeForm={closeForm}
+            activity={selectedActivity}
+            createOrEdit={createOrEdit}
+          />
         )}
       </Grid.Column>
     </Grid>

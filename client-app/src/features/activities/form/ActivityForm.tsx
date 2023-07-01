@@ -1,18 +1,19 @@
 import { ChangeEvent, useState } from "react";
 import { Activity } from "../../../app/models/activity";
 import { Button, Form, Segment } from "semantic-ui-react";
-import { isJsxClosingFragment } from "typescript";
-import { CLIENT_RENEG_LIMIT } from "tls";
 
 interface Props {
   activity: Activity | undefined;
   closeForm: () => void;
+  createOrEdit: (activity: Activity) => void;
 }
 
 export default function ActivityForm({
   activity: selectedActivity,
   closeForm,
+  createOrEdit,
 }: Props) {
+  // Edit object or create an empty one
   const initialState = selectedActivity ?? {
     id: "",
     title: "",
@@ -26,7 +27,7 @@ export default function ActivityForm({
   const [activity, setActivity] = useState(initialState);
 
   function handleSubmit() {
-    console.log(activity);
+    createOrEdit(activity);
   }
 
   function handleInputChange(
