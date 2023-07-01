@@ -4,11 +4,13 @@ import { Button, Card, Image } from "semantic-ui-react";
 interface Props {
   activity: Activity;
   cancelSelectActivity: () => void;
+  openForm: (id: string) => void;
 }
 
 export default function ActivityDetails({
   activity,
   cancelSelectActivity,
+  openForm,
 }: Props) {
   return (
     <Card fluid>
@@ -21,7 +23,12 @@ export default function ActivityDetails({
         <Card.Description>{activity.description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <Button basic color="blue" content="Edit" />
+        <Button
+          onClick={() => openForm(activity.id)}
+          basic
+          color="blue"
+          content="Edit"
+        />
         <Button
           // Since we're not using any parameters here you can add without parentheses, and without parantheses it doesn't execute on load.
           onClick={cancelSelectActivity}
