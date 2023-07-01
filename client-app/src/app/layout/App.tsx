@@ -45,15 +45,20 @@ function App() {
     activity.id
       ? // 2. If updating...
         setActivities([
-          // ...use filter to create a new array without the activity we're updating...
+          // use filter to create a new array without the activity we're updating...
           ...activities.filter((x) => x.id !== activity.id),
-          // ...then set the new activity
+          // then set the new activity
           activity,
         ])
       : // 3. If creating, add activity to activities array
         setActivities([...activities, { ...activity, id: uuid() }]);
     setEditMode(false);
     setSelectedActivity(activity);
+  }
+
+  function handleDeleteActivities(id: string) {
+    // Why does this use the spread operator?
+    setActivities([...activities.filter((x) => x.id !== id)]);
   }
 
   return (
@@ -69,6 +74,7 @@ function App() {
           openForm={handleFormOpen}
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
+          deleteActivity={handleDeleteActivities}
         />
       </Container>
     </>
