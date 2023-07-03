@@ -6,8 +6,10 @@ import ActivityDashboard from "../../features/activities/dashboard/ActivityDashb
 import { v4 as uuid } from "uuid";
 import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
+import { useStore } from "../stores/store";
 
 function App() {
+  const { activityStore } = useStore();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<
     Activity | undefined
@@ -77,8 +79,12 @@ function App() {
   }
 
   function handleDeleteActivities(id: string) {
-    // Why does this use the spread operator?
-    setActivities([...activities.filter((x) => x.id !== id)]);
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      // Why does this use the spread operator?
+      setActivities([...activities.filter((x) => x.id !== id)]);
+      setSubmitting(false);
+    });
   }
 
   if (loading) return <LoadingComponent content="Loading" />;
@@ -87,6 +93,8 @@ function App() {
     <>
       <NavBar openForm={handleFormOpen} />
       <Container style={{ marginTop: "7em" }}>
+        <h2>{activityStore.title}</h2>
+
         <ActivityDashboard
           activities={activities}
           selectedActivity={selectedActivity}
