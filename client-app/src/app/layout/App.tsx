@@ -5,6 +5,7 @@ import NavBar from "./NavBar";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import { v4 as uuid } from "uuid";
 import agent from "../api/agent";
+import LoadingComponent from "./LoadingComponent";
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -12,10 +13,18 @@ function App() {
     Activity | undefined
   >(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     agent.Activities.list().then((response) => {
-      setActivities(response);
+      let activities: Activity[] = [];
+      response.forEach((activity) => {
+        activity.date = activity.date.split("T")[0];
+        activities.push(activity);
+      });
+      setActivities(activities);
+      setLoading(false);
     });
   }, []);
 
@@ -38,26 +47,41 @@ function App() {
   }
 
   function handleCreateOrEditActivity(activity: Activity) {
+    // Start loading indicator
+    setSubmitting(true);
     // Called by Submit button in ActivityForm or Edit button in ActivityDetails
     // 1. Check for an id so we know if we're updating or creating an activity
-    activity.id
-      ? // 2. If updating...
+    if (activity.id) {
+      // 2. If updating...
+      agent.Activities.update(activity).then(() => {
         setActivities([
           // use filter to create a new array without the activity we're updating...
           ...activities.filter((x) => x.id !== activity.id),
           // then set the new activity
           activity,
-        ])
-      : // 3. If creating, add activity to activities array
-        setActivities([...activities, { ...activity, id: uuid() }]);
-    setEditMode(false);
-    setSelectedActivity(activity);
+        ]);
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false);
+      });
+      // 3. If creating, add activity to activities array
+    } else {
+      activity.id = uuid();
+      agent.Activities.create(activity).then(() => {
+        setActivities([...activities, activity]);
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false);
+      });
+    }
   }
 
   function handleDeleteActivities(id: string) {
     // Why does this use the spread operator?
     setActivities([...activities.filter((x) => x.id !== id)]);
   }
+
+  if (loading) return <LoadingComponent content="Loading" />;
 
   return (
     <>
@@ -73,6 +97,7 @@ function App() {
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
           deleteActivity={handleDeleteActivities}
+          submitting={submitting}
         />
       </Container>
     </>
