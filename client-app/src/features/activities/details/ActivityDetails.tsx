@@ -4,11 +4,7 @@ import { Button, Card, Image } from "semantic-ui-react";
 
 export default function ActivityDetails() {
   const { activityStore } = useStore();
-  const {
-    selectedActivity: activity,
-    openForm,
-    cancelSelectedActivity,
-  } = activityStore;
+  const { selectedActivity: activity } = activityStore;
 
   if (!activity) return <LoadingComponent />;
 
@@ -23,15 +19,9 @@ export default function ActivityDetails() {
         <Card.Description>{activity.description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <Button
-          onClick={() => openForm(activity.id)}
-          basic
-          color="blue"
-          content="Edit"
-        />
+        <Button basic color="blue" content="Edit" />
         <Button
           // Since we're not using any parameters here you can add without parentheses, and without parantheses it doesn't execute on load.
-          onClick={cancelSelectedActivity}
           basic
           color="grey"
           content="Cancel"

@@ -30,9 +30,7 @@ export default class ActivityStore {
     try {
       const activities = await agent.Activities.list();
       activities.forEach((activity) => {
-        activity.date = activity.date.split("T")[0];
-        // this.activities.push(activity);
-        this.activityRegistry.set(activity.id, activity);
+        this.setActivity(activity);
       });
       // Since strict-mode is enabled, changing (observed) observable values without using an action is not allowed. Tried to modify: ActivityStore@1.loadingInitial
       // this.loadingInitial = false;
@@ -44,28 +42,36 @@ export default class ActivityStore {
     }
   };
 
+  loadActivity = async (id: string) => {
+    let activity = this.getActivity(id);
+    if (activity) this.selectedActivity = activity;
+    // If activity is no longer in memory due to a page reload (undefined) get it from db
+    else {
+      this.setLoadingInitial(true);
+      try {
+        activity = await agent.Activities.details(id);
+        this.setActivity(activity);
+        this.setLoadingInitial(false);
+      } catch (error) {
+        console.log(error);
+        this.setLoadingInitial(false);
+      }
+    }
+  };
+
+  private setActivity = (activity: Activity) => {
+    activity.date = activity.date.split("T")[0];
+    this.activityRegistry.set(activity.id, activity);
+  };
+
+  // returns Activity or undefined
+  private getActivity(id: string) {
+    return this.activityRegistry.get(id);
+  }
+
   // "action" to fix MobX strict-mode warning
   setLoadingInitial = (state: boolean) => {
     this.loadingInitial = state;
-  };
-
-  selectActivity = (id: string) => {
-    // this.selectedActivity = this.activities.find((a) => a.id === id);
-    // or
-    this.selectedActivity = this.activityRegistry.get(id);
-  };
-
-  cancelSelectedActivity = () => {
-    this.selectedActivity = undefined;
-  };
-
-  openForm = (id?: string) => {
-    id ? this.selectActivity(id) : this.cancelSelectedActivity();
-    this.editMode = true;
-  };
-
-  closeForm = () => {
-    this.editMode = false;
   };
 
   createActivity = async (activity: Activity) => {
@@ -117,14 +123,11 @@ export default class ActivityStore {
   };
 
   deleteActivity = async (id: string) => {
-    await agent.Activities.delete(id);
+    this.loading = true;
     try {
+      await agent.Activities.delete(id);
       runInAction(() => {
-        // this.activities = [...this.activities.filter((x) => x.id !== id)];
-        // or
         this.activityRegistry.delete(id);
-        // Delete activity from Activity Details if selected
-        if (this.selectedActivity?.id === id) this.cancelSelectedActivity();
         this.loading = false;
       });
     } catch (error) {
