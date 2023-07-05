@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 export default observer(function ActivityList() {
   // Direct via MobX
   const { activityStore } = useStore();
-  const { activities, loading, deleteActivity } = activityStore;
+  const { activitiesByDate, loading, deleteActivity } = activityStore;
 
   // Logic for applying loading animation to activity specific Delete button only.
   const [target, setTarget] = useState("");
@@ -21,7 +21,7 @@ export default observer(function ActivityList() {
   return (
     <Segment>
       <Item.Group divided>
-        {activities.map((activity) => (
+        {activitiesByDate.map((activity) => (
           <Item key={activity.id}>
             <Item.Content>
               <Item.Header as="a">{activity.title}</Item.Header>
