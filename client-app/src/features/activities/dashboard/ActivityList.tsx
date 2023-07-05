@@ -1,21 +1,13 @@
 import { SyntheticEvent, useState } from "react";
-import { Activity } from "../../../app/models/activity";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
-interface Props {
-  activities: Activity[];
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}
-
-export default function ActivityList({
-  activities,
-  deleteActivity,
-  submitting,
-}: Props) {
+export default observer(function ActivityList() {
+  // Direct via MobX
   const { activityStore } = useStore();
-  //   const { activities, selectActivity } = activityStore;
+  const { activities, loading, deleteActivity } = activityStore;
+
   // Logic for applying loading animation to activity specific Delete button only.
   const [target, setTarget] = useState("");
   function handleActivityDelete(
@@ -51,7 +43,7 @@ export default function ActivityList({
                 <Button
                   name={activity.id}
                   // loading is a semantic-ui property, not an App state
-                  loading={submitting && target === activity.id}
+                  loading={loading && target === activity.id}
                   onClick={(e) => handleActivityDelete(e, activity.id)}
                   floated="right"
                   content="Delete"
@@ -65,4 +57,4 @@ export default function ActivityList({
       </Item.Group>
     </Segment>
   );
-}
+});

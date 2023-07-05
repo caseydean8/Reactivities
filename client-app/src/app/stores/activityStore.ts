@@ -102,4 +102,21 @@ export default class ActivityStore {
       });
     }
   };
+
+  deleteActivity = async (id: string) => {
+    await agent.Activities.delete(id);
+    try {
+      runInAction(() => {
+        this.activities = [...this.activities.filter((x) => x.id !== id)];
+        // Delete activity from Activity Details if selected
+        if (this.selectedActivity?.id === id) this.cancelSelectedActivity();
+        this.loading = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  };
 }
