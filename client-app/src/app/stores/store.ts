@@ -10,6 +10,7 @@ export const store: Store = {
   activityStore: new ActivityStore(),
 };
 
+// <StoreContext.Provider value={store}> in index.tsx
 export const StoreContext = createContext(store);
 
 export function useStore() {
