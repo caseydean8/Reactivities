@@ -1,6 +1,5 @@
 // makeAutoObservable reduces imports
 // import { action, makeAutoObservable, makeObservable, observable } from "mobx";
-
 import { makeAutoObservable, runInAction } from "mobx";
 import { Activity } from "../models/activity";
 import agent from "../api/agent";
@@ -27,6 +26,7 @@ export default class ActivityStore {
   }
 
   loadActivities = async () => {
+    this.setLoadingInitial(true);
     try {
       const activities = await agent.Activities.list();
       activities.forEach((activity) => {
@@ -51,6 +51,7 @@ export default class ActivityStore {
       try {
         activity = await agent.Activities.details(id);
         this.setActivity(activity);
+        this.selectedActivity = activity;
         this.setLoadingInitial(false);
       } catch (error) {
         console.log(error);
@@ -109,7 +110,7 @@ export default class ActivityStore {
         // ];
         // or
         this.activityRegistry.set(activity.id, activity);
-        // Select activity to display on the right in ActivityDetails.
+        // path: "activities/:id", element: <ActivityDetails />
         this.selectedActivity = activity;
         this.editMode = false;
         this.loading = false;

@@ -1,12 +1,25 @@
+import { observer } from "mobx-react-lite";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useStore } from "../../../app/stores/store";
 import { Button, Card, Image } from "semantic-ui-react";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
-export default function ActivityDetails() {
+export default observer(function ActivityDetails() {
   const { activityStore } = useStore();
-  const { selectedActivity: activity } = activityStore;
+  const {
+    selectedActivity: activity,
+    loadActivity,
+    loadingInitial,
+  } = activityStore;
 
-  if (!activity) return <LoadingComponent />;
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) loadActivity(id);
+  }, [id, loadActivity]);
+
+  if (loadingInitial || !activity) return <LoadingComponent />;
 
   return (
     <Card fluid>
@@ -20,13 +33,8 @@ export default function ActivityDetails() {
       </Card.Content>
       <Card.Content extra>
         <Button basic color="blue" content="Edit" />
-        <Button
-          // Since we're not using any parameters here you can add without parentheses, and without parantheses it doesn't execute on load.
-          basic
-          color="grey"
-          content="Cancel"
-        />
+        <Button basic color="grey" content="Cancel" />
       </Card.Content>
     </Card>
   );
-}
+});
