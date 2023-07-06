@@ -8,10 +8,12 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 export default observer(function ActivityDashboard() {
   // MobX
   const { activityStore } = useStore();
+  const { loadActivities, activityRegistry } = activityStore;
 
   useEffect(() => {
-    activityStore.loadActivities();
-  }, [activityStore]);
+    // Check if ActivityRegistry is in memory with more than 1 element before triggering loading animation
+    if (activityRegistry.size <= 1) loadActivities();
+  }, [activityRegistry.size, loadActivities]);
 
   if (activityStore.loadingInitial)
     return <LoadingComponent content="Loading" />;
