@@ -13,8 +13,9 @@ export const routes: RouteObject[] = [
       { path: "", element: <HomePage /> },
       { path: "activities", element: <ActivityDashboard /> },
       { path: "activities/:id", element: <ActivityDetails /> },
-      { path: "createActivity", element: <ActivityForm /> },
-      { path: "manage/:id", element: <ActivityForm /> },
+      // "create" key allows us to select empty form via the "createActivity" route if we happen to be editing an activity via the "manage/:id" route
+      { path: "createActivity", element: <ActivityForm key="create" /> },
+      { path: "manage/:id", element: <ActivityForm key="manage" /> },
     ],
   },
 ];

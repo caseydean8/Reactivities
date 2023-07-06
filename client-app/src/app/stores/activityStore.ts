@@ -6,13 +6,13 @@ import agent from "../api/agent";
 import { v4 as uuid } from "uuid";
 
 export default class ActivityStore {
-  //   activities: Activity[] = [];
-  // or
+  // activities: Activity[] = [];
+  // ...or create a Map object with the ability to use Map methods get, set, values, delete, etc
   activityRegistry = new Map<string, Activity>();
   selectedActivity: Activity | undefined = undefined;
   editMode = false;
   loading = false;
-  loadingInitial = true;
+  loadingInitial = false;
 
   constructor() {
     // makeObservable that infers observables and actions
@@ -37,7 +37,6 @@ export default class ActivityStore {
       this.setLoadingInitial(false);
     } catch (error) {
       console.log(error);
-      // this.loadingInitial = false;
       this.setLoadingInitial(false);
     }
   };
@@ -86,8 +85,6 @@ export default class ActivityStore {
     try {
       await agent.Activities.create(activity);
       runInAction(() => {
-        // this.activities.push(activity);
-        // or
         this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
         this.editMode = false;
@@ -112,7 +109,7 @@ export default class ActivityStore {
         //   // with the freshly updated activity
         //   activity,
         // ];
-        // or
+        // or handy Map object with set method
         this.activityRegistry.set(activity.id, activity);
         // path: "activities/:id", element: <ActivityDetails />
         this.selectedActivity = activity;
