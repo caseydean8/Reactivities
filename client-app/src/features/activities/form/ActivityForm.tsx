@@ -1,7 +1,10 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
+import { useParams } from "react-router-dom";
+import { Activity } from "../../../app/models/activity";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
@@ -10,10 +13,12 @@ export default observer(function ActivityForm() {
     createActivity,
     updateActivity,
     loading,
+    loadActivity,
+    loadingInitial,
   } = activityStore;
+  const { id } = useParams();
 
-  // Edit object or create an empty one
-  const initialState = selectedActivity ?? {
+  const [activity, setActivity] = useState<Activity>({
     id: "",
     title: "",
     category: "",
@@ -21,9 +26,12 @@ export default observer(function ActivityForm() {
     date: "",
     city: "",
     venue: "",
-  };
+  });
 
-  const [activity, setActivity] = useState(initialState);
+  useEffect(() => {
+    // Non-Null Assertion operator ! tells compiler to ignore undefined or null types. Used in cases where you are certain the value will not be undefined
+    if (id) loadActivity(id).then((activity) => setActivity(activity!));
+  }, [id, loadActivity]);
 
   function handleSubmit() {
     activity.id ? updateActivity(activity) : createActivity(activity);
@@ -35,6 +43,8 @@ export default observer(function ActivityForm() {
     const { name, value } = event.target;
     setActivity({ ...activity, [name]: value });
   }
+
+  if (loadingInitial) return <LoadingComponent content="totally loading..." />;
 
   return (
     <Segment clearing>
