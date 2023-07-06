@@ -23,7 +23,9 @@ export default observer(function ActivityDetails() {
 
   return (
     <Card fluid>
-      <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
+      <Image
+        src={`/assets/categoryImages/${activity?.category || "music"}.jpg`}
+      />
       <Card.Content>
         <Card.Header>{activity.title}</Card.Header>
         <Card.Meta>
