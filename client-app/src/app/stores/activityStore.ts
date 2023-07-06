@@ -81,7 +81,8 @@ export default class ActivityStore {
   createActivity = async (activity: Activity) => {
     // Start loading indicator
     this.loading = true;
-    activity.id = uuid();
+    // Remove this? uuid is created ActivityForm
+    if (!activity.id) activity.id = uuid();
     try {
       await agent.Activities.create(activity);
       runInAction(() => {
