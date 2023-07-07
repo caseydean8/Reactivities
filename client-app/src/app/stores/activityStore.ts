@@ -19,9 +19,30 @@ export default class ActivityStore {
     makeAutoObservable(this);
   }
 
+  // Computed Properties
   get activitiesByDate() {
     return Array.from(this.activityRegistry.values()).sort(
       (a, b) => Date.parse(a.date) - Date.parse(b.date)
+    );
+  }
+
+  get GroupedActivities() {
+    // Object.entries returns an array of a given object's own enumerable string-keyed property key-value pairs
+    return Object.entries(
+      this.activitiesByDate.reduce((activities, activity) => {
+        // Start with an empty activities object, the initialValue in reduce(callbackFn, initialValue)
+        // Get date from activity to set as a key in activities object.
+        const date = activity.date;
+        activities[date] = activities[date]
+          ? // If activities key already exists add activity to the array value assigned to that key.
+            [...activities[date], activity]
+          : // Else add a new array value with new date key
+            [activity];
+        // This seems to do the same thing as the ternary
+        // if (!activities[date]) activities[date] = [];
+        // activities[date].push(activity);
+        return activities;
+      }, {} as { [key: string]: Activity[] })
     );
   }
 

@@ -1,22 +1,33 @@
-import { Item, List, Segment } from "semantic-ui-react";
+import { Header, Item, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
 import ActivityListItem from "./ActivityListItem";
+import { Fragment } from "react";
 
 export default observer(function ActivityList() {
   // Direct via MobX
   const { activityStore } = useStore();
-  const { activitiesByDate } = activityStore;
+  const { GroupedActivities } = activityStore;
 
   return (
-    <List>
-      <Segment>
-        <Item.Group divided>
-          {activitiesByDate.map((activity) => (
-            <ActivityListItem key={activity.id} activity={activity} />
-          ))}
-        </Item.Group>
-      </Segment>
-    </List>
+    <>
+      {/* Since GroupedActivities is an array of arrays, Use bracket notation to map both the date (as group) and the activities */}
+      {GroupedActivities.map(([group, activities]) => (
+        // make Date header from group key
+        <Fragment key={group}>
+          <Header sub color="teal">
+            {group}
+          </Header>
+          <Segment>
+            <Item.Group divided>
+              {activities.map((activity) => (
+                // map activity out under it's group key
+                <ActivityListItem key={activity.id} activity={activity} />
+              ))}
+            </Item.Group>
+          </Segment>
+        </Fragment>
+      ))}
+    </>
   );
 });
