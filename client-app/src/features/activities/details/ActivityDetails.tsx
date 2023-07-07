@@ -1,9 +1,13 @@
 import { observer } from "mobx-react-lite";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useStore } from "../../../app/stores/store";
-import { Button, Card, Image } from "semantic-ui-react";
-import { Link, useParams } from "react-router-dom";
+import { Grid } from "semantic-ui-react";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import ActivityDetailedHeader from "./ActivityDetailedHeader";
+import ActivityDetailedInfo from "./ActivityDetailedInfo";
+import ActivityDetailedChat from "./ActivityDetailedChat";
+import ActivityDetailedSidebar from "./ActivityDetailedSidebar";
 
 export default observer(function ActivityDetails() {
   const { activityStore } = useStore();
@@ -22,35 +26,15 @@ export default observer(function ActivityDetails() {
   if (loadingInitial || !activity) return <LoadingComponent />;
 
   return (
-    <Card fluid>
-      <Image
-        src={`/assets/categoryImages/${activity?.category || "music"}.jpg`}
-      />
-      <Card.Content>
-        <Card.Header>{activity.title}</Card.Header>
-        <Card.Meta>
-          <span className="date">{activity.date}</span>
-        </Card.Meta>
-        <Card.Description>{activity.description}</Card.Description>
-      </Card.Content>
-      <Card.Content extra>
-        {/* edit */}
-        <Button
-          as={Link}
-          to={`/manage/${activity.id}`}
-          basic
-          color="blue"
-          content="Edit"
-        />
-        {/* cancel */}
-        <Button
-          as={Link}
-          to="/activities"
-          basic
-          color="grey"
-          content="Cancel"
-        />
-      </Card.Content>
-    </Card>
+    <Grid>
+      <Grid.Column width={10}>
+        <ActivityDetailedHeader />
+        <ActivityDetailedInfo />
+        <ActivityDetailedChat />
+      </Grid.Column>
+      <Grid.Column width={6}>
+        <ActivityDetailedSidebar />
+      </Grid.Column>
+    </Grid>
   );
 });
