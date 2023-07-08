@@ -1,4 +1,5 @@
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -10,6 +11,15 @@ namespace Application.Activities
         {
             // What we want to receive as a parameter from our API
             public Activity Activity { get; set; }
+        }
+
+        // Validate against a command
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
+            }
         }
 
         // Pass command as type of request to be handled
