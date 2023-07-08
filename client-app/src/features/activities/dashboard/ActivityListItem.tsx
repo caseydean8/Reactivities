@@ -1,27 +1,12 @@
 import { Link } from "react-router-dom";
 import { Item, Button, Segment, Icon } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
-import { useStore } from "../../../app/stores/store";
-import { SyntheticEvent, useState } from "react";
 
 interface Props {
   activity: Activity;
 }
 
 export default function ActivityListItem({ activity }: Props) {
-  const { activityStore } = useStore();
-  const { loading, deleteActivity } = activityStore;
-
-  // Logic for applying loading animation to activity specific Delete button only.
-  const [target, setTarget] = useState("");
-  function handleActivityDelete(
-    e: SyntheticEvent<HTMLButtonElement>,
-    id: string
-  ) {
-    setTarget(e.currentTarget.name);
-    deleteActivity(id);
-  }
-
   return (
     <Segment.Group>
       <Segment>
