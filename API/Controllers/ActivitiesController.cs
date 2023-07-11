@@ -34,6 +34,10 @@ namespace API.Controllers
         {
             // object initializer syntax { Id = id } 
             return await Mediator.Send(new Details.Query { Id = id });
+            // This logic moved to Application.Activities Details
+            // var activity = await Mediator.Send(new Details.Query { Id = id });
+            // if (activity == null) return NotFound();
+            // return activity;
         }
 
         // End point for creating an activity
