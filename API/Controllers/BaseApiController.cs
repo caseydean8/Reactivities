@@ -1,3 +1,4 @@
+using Application.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,5 +15,14 @@ namespace API.Controllers
         // We're creating a private variable for mediator and we're going to populate it with the mediator service.
         // If some other controller comes along and decides it also needs mediator, then if it's got it in this property, great. If not, it's going to go and get it again.
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+
+        protected ActionResult HandleResult<T>(Result<T> result)
+        {
+            if (result.IsSuccess && result.Value != null)
+                return Ok(result.Value);
+            if (result.IsSuccess && result.Value == null)
+                return NotFound();
+            return BadRequest(result.Error);
+        }
     }
 }
