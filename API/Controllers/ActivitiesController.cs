@@ -30,14 +30,11 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")] // api/activities/id
-        public async Task<ActionResult<Activity>> GetActivity(Guid id)
+        // IActionResult allows us to return an http response
+        public async Task<IActionResult> GetActivity(Guid id)
         {
             // object initializer syntax { Id = id } 
-            return await Mediator.Send(new Details.Query { Id = id });
-            // This logic moved to Application.Activities Details
-            // var activity = await Mediator.Send(new Details.Query { Id = id });
-            // if (activity == null) return NotFound();
-            // return activity;
+            return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
 
         // End point for creating an activity
