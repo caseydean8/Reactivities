@@ -1,3 +1,4 @@
+using Application.Core;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -7,7 +8,7 @@ namespace Application.Activities
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             // What we want to receive as a parameter from our API
             public Activity Activity { get; set; }
@@ -25,7 +26,7 @@ namespace Application.Activities
         // Pass command as type of request to be handled
         // 1. Implement interface from IRequestHandler
         // 2. Generate constructor from Handler
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             // 3. Inject DataContext from Persistence in Handler constructor
             private readonly DataContext _context;
@@ -36,14 +37,16 @@ namespace Application.Activities
             }
 
             // 5. Set Task to async
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 // 6. Add the Activity in memory (not db)
                 _context.Activities.Add(request.Activity);
                 // 7. Save Changes
-                await _context.SaveChangesAsync();
+                // The task result from SaveChangesAsync() contains the number of state entries written to the database
+                var result = await _context.SaveChangesAsync() > 0;
+                if (!result) return Result<Unit>.Failure("Failed to create activity");
                 // 8. Empty value returned to tell API request is finished
-                return Unit.Value;
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }

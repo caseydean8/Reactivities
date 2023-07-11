@@ -21,12 +21,12 @@ namespace API.Controllers
         // }
 
         [HttpGet] // api/activities
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        public async Task<IActionResult> GetActivities()
         {
             // return await _context.Activities.ToListAsync();
             // return await _mediator.Send(new List.Query());
             // Mediator is inherited from BaseApiController
-            return await Mediator.Send(new List.Query());
+            return HandleResult(await Mediator.Send(new List.Query()));
         }
 
         [HttpGet("{id}")] // api/activities/id
@@ -42,7 +42,7 @@ namespace API.Controllers
         // IActionResult gives us access to the http response types such as return OK, return bad request, return not found
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
-            return Ok(await Mediator.Send(new Create.Command { Activity = activity }));
+            return HandleResult(await Mediator.Send(new Create.Command { Activity = activity }));
         }
 
         // End point for updating an activity
