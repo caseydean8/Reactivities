@@ -44,6 +44,7 @@ namespace Application.Activities
                 // 7. Save Changes
                 // The task result from SaveChangesAsync() contains the number of state entries written to the database
                 var result = await _context.SaveChangesAsync() > 0;
+
                 if (!result) return Result<Unit>.Failure("Failed to create activity");
                 // 8. Empty value returned to tell API request is finished
                 return Result<Unit>.Success(Unit.Value);

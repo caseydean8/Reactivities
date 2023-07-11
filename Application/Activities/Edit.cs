@@ -1,3 +1,4 @@
+using Application.Core;
 using AutoMapper;
 using Domain;
 using FluentValidation;
@@ -8,7 +9,7 @@ namespace Application.Activities
 {
     public class Edit
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Activity Activity { get; set; }
         }
@@ -24,7 +25,7 @@ namespace Application.Activities
         // One downside to this pattern is a lot of boilerplate code in each handler, thus...
         // 1. Implement IRequestHandler interface
         // 2. Generate constructor from Handler
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             // 3. Inject DataContext into Handler constructor
             private readonly DataContext _context;
@@ -38,17 +39,20 @@ namespace Application.Activities
             }
 
             // 5. Set Task to async
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 // Find activity in database by id
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
+
+                if (activity == null) return null;
                 // Map request activity to activity in/from our db defined above
                 _mapper.Map(request.Activity, activity);
                 // Save changes to db
-                await _context.SaveChangesAsync();
-                // Notify API work is completed
-                return Unit.Value;
+                var result = await _context.SaveChangesAsync() > 0;
 
+                if (!result) return Result<Unit>.Failure("Failed to update activity");
+                // Notify API work is completed
+                return Result<Unit>.Success(Unit.Value);
             }
         }
     }
