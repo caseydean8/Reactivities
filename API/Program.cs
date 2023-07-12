@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -11,10 +12,14 @@ builder.Services.AddApplicationServices(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline. Manipulate the HTTP requests on the way in or out, AKA MIDDLEWARE. The word pipeline is used because at each stage of the requests journey we can do something with that request.
+// Exception-handling delegates should be called early in the pipeline, so they can catch exceptions that occur in later stages of the pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    // This is running in the background handling exceptions, hidden behavior after .Net 5.
+    // app.UseDeveloperExceptionPage();
 }
 
 // order is important in middleware, The browser is going to send a pre flight request to see if Cors is available.

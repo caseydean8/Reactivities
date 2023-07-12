@@ -24,6 +24,7 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.FindAsync(request.Id);
 
+                // This line can be disabled to test deleting a non-existent activity
                 if (activity == null) return null;
                 // Remove from memory
                 _context.Remove(activity);
