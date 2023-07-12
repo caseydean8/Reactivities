@@ -3,6 +3,7 @@ import App from "../app/layout/App";
 import ActivityForm from "../features/activities/form/ActivityForm";
 import ActivityDashboard from "../features/activities/dashboard/ActivityDashboard";
 import ActivityDetails from "../features/activities/details/ActivityDetails";
+import TestErrors from "../features/errors/TestError";
 
 export const routes: RouteObject[] = [
   {
@@ -14,6 +15,7 @@ export const routes: RouteObject[] = [
       // "create" key necessary to select empty form via the "createActivity" route if we happen to be editing <ActivityForm via the "manage/:id" route
       { path: "createActivity", element: <ActivityForm key="create" /> },
       { path: "manage/:id", element: <ActivityForm key="manage" /> },
+      { path: "errors", element: <TestErrors /> },
     ],
   },
 ];
