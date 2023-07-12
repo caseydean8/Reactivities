@@ -10,8 +10,7 @@ function App() {
 
   return (
     <>
-      {/* hideProgressBar property available*/}
-      <ToastContainer position="bottom-right" theme="colored" />
+      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       {location.pathname === "/" ? (
         <HomePage />
       ) : (
