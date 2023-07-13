@@ -19,9 +19,17 @@ axios.interceptors.response.use(
   },
   (error: AxiosError) => {
     const { data, status } = error.response as AxiosResponse;
+
     switch (status) {
       case 400:
-        if (data.errors) {
+        // Handle bad request. toast.error only seems to work if put before bad guid logic
+        if (!data.errors) toast.error(data);
+        // Handle bad guid. May need to add config.method === get to conditions in the future
+        if (data.errors.hasOwnProperty("id")) {
+          router.navigate("/not-found");
+        } else {
+          // if (data.errors) {
+          // Handle validation error
           const modalStateErrors = [];
           for (const key in data.errors) {
             if (data.errors[key]) {
@@ -30,8 +38,6 @@ axios.interceptors.response.use(
           }
           // throw?
           throw modalStateErrors.flat();
-        } else {
-          toast.error(data);
         }
         break;
       case 401:
