@@ -24,7 +24,7 @@ axios.interceptors.response.use(
       case 400:
         // Handle bad request. toast.error only seems to work if put before bad guid logic
         if (!data.errors) toast.error(data);
-        // Handle bad guid. May need to add config.method === get to conditions in the future
+        // Handle bad guid. May need to add && config.method === get to conditions in the future
         if (data.errors.hasOwnProperty("id")) {
           router.navigate("/not-found");
         } else {
