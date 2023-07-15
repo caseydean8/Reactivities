@@ -9,16 +9,11 @@ import { v4 as uuid } from "uuid";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import MyTextInput from "../../../app/common/form/MyTextInput";
+import MyTextArea from "../../../app/common/form/MyTextArea";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
-  const {
-    createActivity,
-    updateActivity,
-    loading,
-    loadActivity,
-    loadingInitial,
-  } = activityStore;
+  const { createActivity, updateActivity, loading, loadActivity, loadingInitial } = activityStore;
   const { id } = useParams();
   // Direct user to <ActivityDetails /> after creating/updating activity
   const navigate = useNavigate();
@@ -68,7 +63,7 @@ export default observer(function ActivityForm() {
   //     setActivity({ ...activity, [name]: value });
   //   }
 
-  if (loadingInitial) return <LoadingComponent content="totally loading..." />;
+  if (loadingInitial) return <LoadingComponent content='totally loading...' />;
 
   return (
     <Segment clearing>
@@ -79,27 +74,15 @@ export default observer(function ActivityForm() {
         onSubmit={values => console.log(values)}
       >
         {({ values: activity, handleChange, handleSubmit }) => (
-          <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
-            <MyTextInput name="title" placeholder="Title" />
-            <MyTextInput placeholder="Description" name="description" />
-            <MyTextInput placeholder="Category" name="category" />
-            <MyTextInput placeholder="Date" name="date" />
-            <MyTextInput placeholder="City" name="city" />
-            <MyTextInput placeholder="Venue" name="venue" />
-            <Button
-              loading={loading}
-              floated="right"
-              positive
-              type="submit"
-              content="Submit"
-            />
-            <Button
-              as={Link}
-              to="/activities"
-              floated="right"
-              type="button"
-              content="Cancel"
-            />
+          <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
+            <MyTextInput name='title' placeholder='Title' />
+            <MyTextArea rows={3} placeholder='Description' name='description' />
+            <MyTextInput placeholder='Category' name='category' />
+            <MyTextInput placeholder='Date' name='date' />
+            <MyTextInput placeholder='City' name='city' />
+            <MyTextInput placeholder='Venue' name='venue' />
+            <Button loading={loading} floated='right' positive type='submit' content='Submit' />
+            <Button as={Link} to='/activities' floated='right' type='button' content='Cancel' />
           </Form>
         )}
       </Formik>
