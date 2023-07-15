@@ -1,12 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { Button, Form, Segment } from "semantic-ui-react";
+import { Button, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Activity } from "../../../app/models/activity";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { v4 as uuid } from "uuid";
-import { Formik } from "formik";
+import { Formik, Form, Field } from "formik";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
@@ -33,7 +33,7 @@ export default observer(function ActivityForm() {
 
   useEffect(() => {
     // Non-Null Assertion operator ! tells compiler to ignore undefined or null types. Used in cases where you are certain the value will not be undefined
-    if (id) loadActivity(id).then((activity) => setActivity(activity!));
+    if (id) loadActivity(id).then(activity => setActivity(activity!));
   }, [id, loadActivity]);
 
   //   function handleSubmit() {
@@ -64,47 +64,16 @@ export default observer(function ActivityForm() {
       <Formik
         enableReinitialize
         initialValues={activity}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={values => console.log(values)}
       >
         {({ values: activity, handleChange, handleSubmit }) => (
-          <Form onSubmit={handleSubmit} autoComplete="off">
-            <Form.Input
-              placeholder="Title"
-              value={activity.title}
-              name="title"
-              onChange={handleChange}
-            />
-            <Form.TextArea
-              placeholder="Description"
-              value={activity.description}
-              name="description"
-              onChange={handleChange}
-            />
-            <Form.Input
-              placeholder="Category"
-              value={activity.category}
-              name="category"
-              onChange={handleChange}
-            />
-            <Form.Input
-              type="date"
-              placeholder="Date"
-              value={activity.date}
-              name="date"
-              onChange={handleChange}
-            />
-            <Form.Input
-              placeholder="City"
-              value={activity.city}
-              name="city"
-              onChange={handleChange}
-            />
-            <Form.Input
-              placeholder="Venue"
-              value={activity.venue}
-              name="venue"
-              onChange={handleChange}
-            />
+          <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
+            <Field placeholder="Title" name="title" />
+            <Field placeholder="Description" name="description" />
+            <Field placeholder="Category" name="category" />
+            <Field type="date" placeholder="Date" name="date" />
+            <Field placeholder="City" name="city" />
+            <Field placeholder="Venue" name="venue" />
             <Button
               loading={loading}
               floated="right"
