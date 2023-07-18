@@ -1,9 +1,10 @@
 // makeAutoObservable reduces imports
 // import { action, makeAutoObservable, makeObservable, observable } from "mobx";
-import { makeAutoObservable, runInAction } from "mobx";
-import { Activity } from "../models/activity";
-import agent from "../api/agent";
-import { v4 as uuid } from "uuid";
+import { makeAutoObservable, runInAction } from 'mobx';
+import { Activity } from '../models/activity';
+import agent from '../api/agent';
+import { v4 as uuid } from 'uuid';
+import { format } from 'date-fns';
 
 export default class ActivityStore {
   // activities: Activity[] = [];
@@ -22,17 +23,17 @@ export default class ActivityStore {
   // Computed Properties
   get activitiesByDate() {
     return Array.from(this.activityRegistry.values()).sort(
-      (a, b) => Date.parse(a.date) - Date.parse(b.date)
+      (a, b) => a.date!.getTime() - b.date!.getTime()
     );
   }
 
-  get GroupedActivities() {
+  get groupedActivities() {
     // Object.entries returns an array of a given object's own enumerable string-keyed property key-value pairs
     return Object.entries(
       this.activitiesByDate.reduce((activities, activity) => {
         // Start with an empty activities object, the initialValue in reduce(callbackFn, initialValue)
         // Get date from activity to set as a key in activities object.
-        const date = activity.date;
+        const date = format(activity.date!, 'dd MMM yyyy');
         activities[date] = activities[date]
           ? // If activities key already exists add activity to the array value assigned to that key.
             [...activities[date], activity]
@@ -50,7 +51,7 @@ export default class ActivityStore {
     this.setLoadingInitial(true);
     try {
       const activities = await agent.Activities.list();
-      activities.forEach((activity) => {
+      activities.forEach(activity => {
         this.setActivity(activity);
       });
       // Since strict-mode is enabled, changing (observed) observable values without using an action is not allowed. Tried to modify: ActivityStore@1.loadingInitial
@@ -85,7 +86,7 @@ export default class ActivityStore {
   };
 
   private setActivity = (activity: Activity) => {
-    activity.date = activity.date.split("T")[0];
+    activity.date = new Date(activity.date!);
     this.activityRegistry.set(activity.id, activity);
   };
 
