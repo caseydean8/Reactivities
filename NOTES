@@ -1,0 +1,24 @@
+1. installed Microsoft.EntityFrameworkCore.Sqlite version 7.0.0 rather than 7.0.7
+
+- dotnet watch --no-hot-reload
+
+- dotnet restore // in case packages aren't loading in vscode properly
+
+- Stop API server whenever you create a new migration.
+run in root folder (Reactivities)
+dotnet ef migrations add IdentityAdded -p Persistence -s API
+<!-- Learning Goals 11 -->
+
+- AspNetCore.Identity
+
+  - Membership System
+  - Supports login stored in Identity
+  - Supports external providers?
+  - Come with default user stores?
+  - User Manager
+  - Sign in Manager
+
+- JWT Token Authentication
+
+TODO
+convert from react to next.js
