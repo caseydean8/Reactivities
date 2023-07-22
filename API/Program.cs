@@ -1,5 +1,7 @@
 using API.Extensions;
 using API.Middleware;
+using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -37,11 +39,12 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
     // Applies any pending migrations for the context to the database.Will create the database if it does not already exist.
     // Since we're using asynchronous code with SeedData, we should use it with Migrate() also
     await context.Database.MigrateAsync();
     // SeedData is an async class
-    await Seed.SeedData(context);
+    await Seed.SeedData(context, userManager);
 }
 catch (System.Exception ex)
 {
