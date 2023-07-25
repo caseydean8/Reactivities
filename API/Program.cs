@@ -27,7 +27,7 @@ if (app.Environment.IsDevelopment())
 
 // order is important in middleware, The browser is going to send a pre flight request to see if Cors is available.
 app.UseCors("CorsPolicy");
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
