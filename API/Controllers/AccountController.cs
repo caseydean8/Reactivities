@@ -12,9 +12,11 @@ namespace API.Controllers
 
         // AspNetCore.Identity.UserManager provides the APIs for managing user in a persistence store.
         private readonly UserManager<AppUser> _userManager;
+        private readonly TokenService _tokenService;
 
-        public AccountController(UserManager<AppUser> userManager)
+        public AccountController(UserManager<AppUser> userManager, TokenService tokenService)
         {
+            _tokenService = tokenService;
             _userManager = userManager;
         }
 
@@ -34,7 +36,7 @@ namespace API.Controllers
                 {
                     DisplayName = user.DisplayName,
                     Image = null,
-                    Token = "this will be token",
+                    Token = _tokenService.CreateToken(user),
                     Username = user.UserName,
                 };
             }
