@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Controllers.DTOs;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -23,6 +23,7 @@ namespace API.Controllers
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
@@ -35,18 +36,13 @@ namespace API.Controllers
 
             if (result)
             {
-                return new UserDto
-                {
-                    DisplayName = user.DisplayName,
-                    Image = null,
-                    Token = _tokenService.CreateToken(user),
-                    Username = user.UserName,
-                };
+                return CreateUserObject(user);
             }
 
             return Unauthorized();
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
@@ -71,17 +67,30 @@ namespace API.Controllers
 
             // .Succeeded indicates an async await scenario. if you forget the await in the result variable it doesn't exist
             if (result.Succeeded)
-            {
-                return new UserDto
-                {
-                    DisplayName = user.DisplayName,
-                    Image = null,
-                    Token = _tokenService.CreateToken(user),
-                    Username = user.UserName
-                };
-            }
+            { return CreateUserObject(user); }
 
             return BadRequest(result.Errors);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            // In an API controller context we have access to ClaimsPrincipal ControllerBase.User { get; }. And because we're authenticating to our controllers with a token, then our claims principle is going to be based on that token.
+            var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+
+            return CreateUserObject(user);
+        }
+        private UserDto CreateUserObject(AppUser user)
+        {
+            return new UserDto
+            {
+                DisplayName = user.DisplayName,
+                Image = null,
+                Token = _tokenService.CreateToken(user),
+                Username = user.UserName
+            };
+        }
+
     }
 }
