@@ -22,3 +22,13 @@ dotnet ef migrations add IdentityAdded -p Persistence -s API
 
 TODO
 convert from react to next.js
+
+Members are the declarations within an interface that define the shape and structure of the object that adheres to the interface. Each member has a name (the "key") and a type that represents the expected data type of the value (the "value").
+
+// element:
+<Component>
+<ChildComponent />
+</Component>
+
+// void element:
+<Component />
