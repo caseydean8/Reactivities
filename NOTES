@@ -20,9 +20,6 @@ dotnet ef migrations add IdentityAdded -p Persistence -s API
 
 - JWT Token Authentication
 
-TODO
-convert from react to next.js
-
 Members are the declarations within an interface that define the shape and structure of the object that adheres to the interface. Each member has a name (the "key") and a type that represents the expected data type of the value (the "value").
 
 // element:
@@ -32,3 +29,5 @@ Members are the declarations within an interface that define the shape and struc
 
 // void element:
 <Component />
+
+Check lesson 303 for oncoming issues with vite migration, especially commentStore
