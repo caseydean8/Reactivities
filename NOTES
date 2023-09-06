@@ -31,3 +31,19 @@ Members are the declarations within an interface that define the shape and struc
 <Component />
 
 Check lesson 303 for oncoming issues with vite migration, especially commentStore
+
+dotnet ef migrations add ActivityAttendee -p Persistence -s API
+
+dotnet ef: The .NET CLI command for Entity Framework Core.
+
+migrations: Used for managing database migrations, which are a way to version and update your database schema as your application evolves.
+
+add ActivityAttendee: Specifying the name of the migration being added.
+Conventionally, when you create a join table, which is what this is, then you'll specify the name of the two entities as the name of the join table.
+Migrations are used to capture changes to the database schema over time, such as adding, modifying, or removing database tables and columns.
+
+-p Persistence: Specifies the project where your DbContext and EF Core configuration are located.
+The -p option is followed by the name of the project folder, which is typically where your data access code is implemented.
+
+-s API: Specifies the project where your startup code and application entry point are located.
+The -s option is followed by the name of the project folder, which typically represents your application's API or web server.
