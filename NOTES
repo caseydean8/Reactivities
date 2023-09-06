@@ -30,7 +30,7 @@ Members are the declarations within an interface that define the shape and struc
 // void element:
 <Component />
 
-Check lesson 303 for oncoming issues with vite migration, especially commentStore
+# Check lesson 303 for oncoming issues with vite migration, especially commentStore
 
 dotnet ef migrations add ActivityAttendee -p Persistence -s API
 
@@ -47,3 +47,21 @@ The -p option is followed by the name of the project folder, which is typically 
 
 -s API: Specifies the project where your startup code and application entry point are located.
 The -s option is followed by the name of the project folder, which typically represents your application's API or web server.
+
+=========================================================================================
+from solution level
+dotnet new classlib -n Infrastructure
+This command is used to create a new class library project in C# with the name "Infrastructure."
+
+dotnet new: Base command for creating new projects and files in .NET
+
+classlib: Template name that specifies you want to create a class library project.
+
+-n Infrastructure: Specify the name Infrastructure for the project you want to make. The -n option is followed by the name you want to give to your project.
+
+dotnet sln add Infrastructure
+cd Infrastructure
+dotnet add reference ../Application
+cd ..
+cd API
+dotnet add reference ../Infrastructure
