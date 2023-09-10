@@ -1,7 +1,9 @@
 using Application.Core;
+using Application.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Activities
@@ -31,14 +33,26 @@ namespace Application.Activities
             // 3. Inject DataContext from Persistence in Handler constructor
             private readonly DataContext _context;
             // 4. Initialize field from parameter context
-            public Handler(DataContext context)
+            private readonly IUserAccessor _userAccessor;
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
             }
 
             // 5. Set Task to async
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUserName());
+
+                var attendee = new ActivityAttendee
+                {
+                    AppUser = user,
+                    Activity = request.Activity,
+                    IsHost = true
+                };
+
+                request.Activity.Attendees.Add(attendee);
                 // 6. Add the Activity in memory (not db)
                 _context.Activities.Add(request.Activity);
                 // 7. Save Changes
