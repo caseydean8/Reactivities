@@ -1,4 +1,5 @@
 using Application.Core;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,20 +10,28 @@ namespace Application.Activities
     public class List
     {
         // use IRequest interface from MediatR to return a list of type Domain.Activity
-        public class Query : IRequest<Result<List<Activity>>> { }
+        public class Query : IRequest<Result<List<ActivityDto>>> { }
         // use IRequestHandler interface from MediatR to 
-        public class Handler : IRequestHandler<Query, Result<List<Activity>>>
+        public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>>
         {
             private readonly DataContext _context;
             // constructor where we bring in DataContext from Persistence
-            public Handler(DataContext context)
+            private readonly IMapper _mapper;
+            public Handler(DataContext context, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
             }
             // method that passes Query from line 11 and returns the List specified in line 11
-            public async Task<Result<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return Result<List<Activity>>.Success(await _context.Activities.ToListAsync(cancellationToken));
+                var activities = await _context.Activities
+                .Include(a => a.Attendees)
+                .ThenInclude(u => u.AppUser)
+                .ToListAsync(cancellationToken);
+                var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
+
+                return Result<List<ActivityDto>>.Success(activitiesToReturn);
             }
         }
     }

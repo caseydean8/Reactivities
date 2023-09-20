@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
     public class ActivitiesController : BaseApiController
     {
         // Not going to be injecting DataContext (below) inside this class, it has been moved to Application.Activites.List and using MediatR instead

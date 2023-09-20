@@ -14,6 +14,6 @@ namespace Domain
         public string City { get; set; }
         public string Venue { get; set; }
         // This property represents a collection of AppUser objects.
-        public ICollection<ActivityAttendee> Attendees { get; set; }
+        public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
     }
 }

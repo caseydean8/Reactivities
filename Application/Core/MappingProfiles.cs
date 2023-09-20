@@ -1,3 +1,4 @@
+using Application.Activities;
 using AutoMapper;
 using Domain;
 
@@ -9,6 +10,7 @@ namespace Application.Core
         {
             // Create mapping from TSource Domain.Activity to TDestination Domain.Activity for Update operations
             CreateMap<Activity, Activity>();
+            CreateMap<Activity, ActivityDto>();
         }
     }
 }
