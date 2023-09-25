@@ -1,6 +1,5 @@
 using Application.Core;
 using AutoMapper;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -9,9 +8,7 @@ namespace Application.Activities
 {
     public class List
     {
-        // use IRequest interface from MediatR to return a list of type Domain.Activity
         public class Query : IRequest<Result<List<ActivityDto>>> { }
-        // use IRequestHandler interface from MediatR to 
         public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>>
         {
             private readonly DataContext _context;
