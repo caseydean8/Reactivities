@@ -61,5 +61,12 @@ namespace API.Controllers
             // Again use object initializer syntax when we instantiate this particular class
             return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
         }
+
+        // End point for attendance handler
+        [HttpPost("{id}/attend")]
+        public async Task<IActionResult> Attend(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
+        }
     }
 }
