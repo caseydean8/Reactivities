@@ -47,6 +47,7 @@ namespace API.Controllers
         }
 
         // End point for updating an activity
+        [Authorize(Policy = "IsActivityHost")]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
@@ -55,6 +56,7 @@ namespace API.Controllers
         }
 
         // End point for deleting an activity
+        [Authorize(Policy = "IsActivityHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
